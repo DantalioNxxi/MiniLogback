@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Последовательности:
+    %d дата и время;
+    %t имя потока;
+    %p Logger.LogLevel;
+    %l имя логгера;
+    %C имя вызывающего класса;
+    %L номер строки;
+    %m message;
+    throwable ThrowableInfo;
+    %n - переход на след. строку
+-->
+
+<configuration>
+  <!--Аппендеры -->
+  <!--Файловый аппендер -->
+  <appender name="file" class="myminilogback.FileAppender">
+        <file>src/test/java/log.log</file>
+        <layout>
+            <Pattern>%d %t %p %C %L %m %n</Pattern>
+        </layout>
+  </appender>
+  <!--Консольный аппендер -->
+  <appender name="sout" class="myminilogback.ConsoleAppender">
+    <layout>
+        <Pattern>%d %t %p %C %L %m %n</Pattern>
+    </layout>
+  </appender>
+  <!-- Логгеры -->
+  <!-- Корневой логгер -->
+  <root level="INFO">
+    <appender-ref ref="file" />
+  </root>
+  <!-- Логгер определённого класса  -->
+  <logger name="src.test.java.LogRacing" level="INFO" >
+    <appender-ref ref="sout" />
+  </logger>
+</configuration>

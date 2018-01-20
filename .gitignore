@@ -1,0 +1,47 @@
+﻿
+#ant specific
+dist/WorkWithTrees.jar
+build/
+
+#netbeans specific#
+nbproject/private/
+nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+core
+#!nbproject/project.properties
+#!nbproject/project.xml
+
+#general swap/backup files
+*.so
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/target/
+/nbproject/
