@@ -16,34 +16,25 @@
 <configuration>
   <!--Аппендеры -->
   <!--Файловый аппендер -->
-  <appender name="file" class="FileAppender">
+  <appender name="file" class="myminilogback.FileAppender">
         <file>src/test/java/log.log</file>
         <layout>
-            <Pattern>%d %t %p %l %m throwable %n</Pattern>
+            <Pattern>%d %t %p %C %L %m %n</Pattern>
         </layout>
   </appender>
   <!--Консольный аппендер -->
-  <appender name="sout" class="ConsoleAppender">
+  <appender name="sout" class="myminilogback.ConsoleAppender">
     <layout>
-        <Pattern>%d %t %p %l %m %n</Pattern>
+        <Pattern>%d %t %p %C %L %m %n</Pattern>
     </layout>
-  </appender>
-  <appender name="file2" class="FileAppender">
-        <file>src/test/java/log.txt</file>
-        <layout>
-            <Pattern>%d %t %p %m %n</Pattern>
-        </layout>
   </appender>
   <!-- Логгеры -->
   <!-- Корневой логгер -->
   <root level="INFO">
-    <appender-ref ref="sout" />
+    <appender-ref ref="file" />
   </root>
   <!-- Логгер определённого класса  -->
-  <logger name="LogRacing" level="INFO" >
-    <appender-ref ref="sout" />
-  </logger>
-  <logger name="Logger2" level="INFO" >
+  <logger name="src.test.java.LogRacing" level="INFO" >
     <appender-ref ref="sout" />
   </logger>
 </configuration>

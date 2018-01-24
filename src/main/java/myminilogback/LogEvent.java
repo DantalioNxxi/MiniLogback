@@ -14,29 +14,45 @@ public class LogEvent {
     private Logger.LogLevel priority;
     private String nameLogger;
     private String causingClassName;
+    private String causingMethodName;
     private long numberOfLine;
     private String message;
     private Throwable ex;
     
-    LogEvent(Logger.LogLevel level, String message){
+    LogEvent(Logger.LogLevel level, String nameLogger, String message){
         dateEvent = new Date();
-        threadName = "имя вызывающего потока";
+        threadName = Thread.currentThread().getName();
         priority = level;
-        nameLogger = "имя логгера";
-        causingClassName = "имя вызывающего класса";
-        numberOfLine = 33;
+        this.nameLogger = nameLogger;
         this.message = message;
+        createCausingNames();
     }
     
-    LogEvent(Logger.LogLevel level, String message, Throwable ex){
+    LogEvent(Logger.LogLevel level, String nameLogger, String message, Throwable ex){
         dateEvent = new Date();
-        threadName = "имя вызывающего потока";
+        threadName = Thread.currentThread().getName();
         priority = level;
-        nameLogger = "имя логгера";
-        causingClassName = "имя вызывающего класса";
-        numberOfLine = 33;
+        this.nameLogger = nameLogger;
         this.message = message;
         this.ex = ex; //it is need at modifayed
+        createCausingNames();
+    }
+    
+    private void createCausingNames(){
+        Throwable thr = new Throwable();
+            StackTraceElement[] ste = thr.getStackTrace();
+            for (int i = 0; i < ste.length; i++) {
+                if (ste[i].toString().contains("Logger.info")
+                    ||ste[i].toString().contains("Logger.warning")
+                        ||ste[i].toString().contains("Logger.fatal"))
+                {
+                    StackTraceElement e = ste[i+1];
+                    this.causingClassName = e.getClassName();
+                    this.causingMethodName = e.getMethodName();
+                    this.numberOfLine = e.getLineNumber();
+                    break;
+                }
+            }
     }
 
     String getNameLogger() {
@@ -59,6 +75,10 @@ public class LogEvent {
         return causingClassName;
     }
 
+    String getCausingMethodName() {
+        return causingMethodName;
+    }
+    
     long getNumberOfLine() {
         return numberOfLine;
     }
@@ -70,7 +90,6 @@ public class LogEvent {
     Throwable getThrow() {
         return ex;
     }
-    
     
 }
 

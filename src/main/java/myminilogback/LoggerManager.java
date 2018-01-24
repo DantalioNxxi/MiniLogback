@@ -28,18 +28,26 @@ public class LoggerManager {
     private static Map<String, Logger> loggers;
     private static Map<String, Appendable> appenders;
     //    private static Map<String, Layout> layouts;
+    private LoggerManager(){}
     
     static {
         
-        loggers = new HashMap<>();
+        loggers = new HashMap<>();//deamon-thread
         appenders = new HashMap<>();
         
+        
+        //добавить финальную переменную по умолчанию или производить поиск файла через Files
         try (FileInputStream fis = new FileInputStream("src/main/resources/logback.xml"))
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); // still here
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(fis); //still so //Document doc = db.parse(newFile); //still so
             doc.getDocumentElement().normalize();
+            
+            int configuration = doc.getElementsByTagName("configuration").getLength();
+            if (configuration!=1){
+                throw new XMLLoggerException("Должен быть только один тег configuration!");
+            }
             
             NodeList apps = doc.getElementsByTagName("appender");
             getAppenders(apps);
@@ -77,17 +85,22 @@ public class LoggerManager {
                 
                 Layout newLayout = getLayout(appElement.getElementsByTagName("layout"));
                 
-                AbstractAppender newAppender;
                 if (classname.contains("File")){
                     File logfile = new File(appElement.getElementsByTagName("file").item(0).getTextContent());
-                    newAppender = new FileAppender(logfile);
+                    FileAppender newAppender = new FileAppender(logfile);
                     newAppender.setLayout(newLayout);
+                    newAppender.classname = classname;
+                    newAppender.name = name;
+                    System.out.println("Создан аппендер: "+newAppender.toString());
                     appenders.put(name, newAppender);//!later there is need to create instance class classname
                 } else if (classname.contains("Console")){
-                    newAppender = new ConsoleAppender();
+                    ConsoleAppender newAppender = new ConsoleAppender();
                     newAppender.setLayout(newLayout);
+                    newAppender.classname = classname;
+                    newAppender.name = name;
+                    System.out.println("Создан аппендер: "+newAppender.toString());
                     appenders.put(name, newAppender);//!later there is need to create instance class classname
-                    //rewrite repeatable code!
+                    //rewrite repeatable code! set universal method!
                 }
             }
         }
@@ -102,7 +115,7 @@ public class LoggerManager {
                     for(int p = 0; p < patterns.getLength(); p++){
                         Node patternNode = patterns.item(p);
                         if (patternNode.getNodeType() == Node.ELEMENT_NODE){ //if pattern is exist
-                            System.out.println("Будет создан лейаут с seq: "+patternNode.getTextContent());
+//                            System.out.println("Будет создан лейаут с seq: "+patternNode.getTextContent());
                             return new SimpleLayout(patternNode.getTextContent());
                         }
                     }
@@ -162,11 +175,7 @@ public class LoggerManager {
         }
     }
     
-    private LoggerManager(){
-        
-    }
-    
-    public static void showInfo(){
+    public static synchronized void showInfo(){
         
         System.out.println("Было добавлено "+appenders.size()+" аппендеров:\n"+appenders);
         
@@ -174,14 +183,44 @@ public class LoggerManager {
         
     }
     
-    public static Logger getLogger(String name){
+    /**
+     * Gives the reference to logger with "name".
+     * If such logger do not exists, manager will create a new logger
+     * with reference to ConsoleAppender.
+     * @param name of logger, which have to writed into XML-document.
+     * @return reference to logger.
+     */
+    public static synchronized Logger getLogger(String name){
         if (loggers.containsKey(name)){
             return loggers.get(name);
         } else {
-            System.out.println("Для логгера с именем "+name+" не задана конфигурация");
+            System.out.println("Для логгера с именем "+name+" не задана конфигурация"
+                    + ".\nБудет создан новый логгер со ссылкой на консольный аппендер.");
             Logger newLogger = new Logger(name);
             loggers.put(name, newLogger);
+            getConsolAppenderToNewLogger(newLogger);
             return newLogger;
+        }
+    }
+    
+    /**
+     * If new logger do not contains appenders,
+     * then he will've get a new ConsoleAppender with name defaultConsoleAppender.
+     * @param logger new logger
+     */
+    private static void getConsolAppenderToNewLogger(Logger logger){
+        for(Map.Entry<String, Appendable> a : appenders.entrySet()){
+            if (a.getValue().getClassName().equals("ConsoleAppender")) {
+                logger.addAppender(a.getValue());
+            }
+        }
+        if (!logger.isContainsAppender()) {
+            ConsoleAppender ca = new ConsoleAppender(new SimpleLayout());
+            ca.name = "defaultConsoleAppender";
+            ca.classname = "ConsoleAppender";
+            appenders.put(ca.name, ca);
+            //здесь потом исправить на получение класса через рефлексию
+            logger.addAppender(appenders.get(ca.name));
         }
     }
     

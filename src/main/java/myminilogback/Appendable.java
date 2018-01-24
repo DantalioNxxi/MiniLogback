@@ -12,6 +12,10 @@ public interface Appendable {
      * @param le is instance of one log
      */
     void record(LogEvent le);
+    
+    String getName();
+    String getClassName();
+//    Layout getLayout();
      
     void close();//close all resources
 }

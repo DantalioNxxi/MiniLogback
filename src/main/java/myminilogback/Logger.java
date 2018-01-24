@@ -43,20 +43,20 @@ public class Logger {
         this.level = level;
     }
     
-    private void log(LogLevel level, String message){
+    private synchronized void log(LogLevel level, String message){
         //sell this log to all appenders
         if (!appenders.isEmpty()){
             //create the logEvent
-            LogEvent le = new LogEvent(level, message);
+            LogEvent le = new LogEvent(level, name, message);
             for (Appendable app : appenders){
                 app.record(le);
             }
         }
     }
     
-    private void log(LogLevel level, String message, Throwable throwable){
+    private synchronized void log(LogLevel level, String message, Throwable throwable){
         if (!appenders.isEmpty()){
-            LogEvent le = new LogEvent(level, message, throwable);
+            LogEvent le = new LogEvent(level, name, message, throwable);
             for (Appendable app : appenders){
                 app.record(le);
             }
@@ -80,23 +80,23 @@ public class Logger {
     }
     
     public void warning(String message){
-        if (this.level.priority<=LogLevel.INFO.priority) {
+        if (this.level.priority<=LogLevel.WARN.priority) {
             log(LogLevel.WARN, message);
         }
     }
     public void warning(String message, Throwable throwable){
-        if (this.level.priority<=LogLevel.INFO.priority) {
+        if (this.level.priority<=LogLevel.WARN.priority) {
             log(LogLevel.WARN, message, throwable);
         }
     }
     
     public void fatal(String message){
-        if (this.level.priority<=LogLevel.INFO.priority) {
+        if (this.level.priority<=LogLevel.FATAL.priority) {
             log(LogLevel.FATAL, message);
         }
     }
     public void fatal(String message, Throwable throwable){
-        if (this.level.priority<=LogLevel.INFO.priority) {
+        if (this.level.priority<=LogLevel.FATAL.priority) {
             log(LogLevel.FATAL, message, throwable);
         }
     }
@@ -108,6 +108,11 @@ public class Logger {
 
     void addAppender(Appendable app) {
         appenders.add(app);
+    }
+    
+    boolean isContainsAppender(){
+        if (appenders.isEmpty()) return false;
+        return true;
     }
 
     public String getName() {

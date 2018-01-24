@@ -53,22 +53,38 @@ public class SimpleLayout implements Layout{
                 return le.getNameLogger();
             }
             case "%C": {
-                return le.getCausingClassName();
+                return "CallClass: "+le.getCausingClassName();
+            }
+            case "%M": {
+                return "CallMethod: "+le.getCausingMethodName();
             }
             case "%L": {
-                return "Строка:"+Long.toString(le.getNumberOfLine());
+                return "Line:"+Long.toString(le.getNumberOfLine());
             }
             case "%m": {
                 return le.getMessage();
             }
             case "throwable": {
-                return le.getThrow().getMessage();
+                if (le.getThrow() != null){
+                    Throwable thr = le.getThrow();
+                    return "Throw: "
+                        +(thr.getCause()==null?thr.toString():thr.getCause().toString())
+                        +": "
+                        +le.getThrow().getMessage();
+                }
+                
+                else return "";
             }
             case "%n": {
                 return "\n";
             }
             default: return " ";
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleLayout{" + "sequence=" + sequence + '}';
     }
     
 }
