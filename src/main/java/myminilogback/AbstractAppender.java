@@ -2,8 +2,13 @@
 package myminilogback;
 
 /**
- *
+ * Abstract class of any Appender.
+ * That object can to record logs(LogEvents).
  * @author DantalioNxxi
+ * @see Appendable
+ * @see ConsoleAppender
+ * @see FileAppender
+ * @see RollingFileAppender
  */
 public abstract class AbstractAppender implements Appendable{
     protected String name;
@@ -15,10 +20,10 @@ public abstract class AbstractAppender implements Appendable{
      */
     protected AbstractAppender(){}
 
-//    @Override
-//    public Layout getLayout() {
-//        return layout;
-//    }
+    @Override
+    public Layout getLayout() {
+        return layout;
+    }
 
     @Override
     public String getName() {
@@ -31,7 +36,8 @@ public abstract class AbstractAppender implements Appendable{
     }
     
     public void setLayout(Layout layout) {
-        this.layout = layout;
+        if (layout==null) this.layout = new SimpleLayout();
+        else this.layout = layout;
     }
 
     @Override

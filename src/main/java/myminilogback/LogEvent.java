@@ -4,7 +4,7 @@ package myminilogback;
 import java.util.Date;
 
 /**
- * Class for one log's instance
+ * Class for one log's instance.
  * @author DantalioNxxi
  */
 public class LogEvent {
@@ -19,6 +19,12 @@ public class LogEvent {
     private String message;
     private Throwable ex;
     
+    /**
+     * To create a new Log without exception's description.
+     * @param level assumed permit level
+     * @param nameLogger through that, which accepted message
+     * @param message just message
+     */
     LogEvent(Logger.LogLevel level, String nameLogger, String message){
         dateEvent = new Date();
         threadName = Thread.currentThread().getName();
@@ -28,6 +34,13 @@ public class LogEvent {
         createCausingNames();
     }
     
+    /**
+     * To create a new Log with exception's description.
+     * @param level assumed permit level
+     * @param nameLogger through that, which accepted message
+     * @param message just message
+     * @param ex exception, whose description will show into the Log
+     */
     LogEvent(Logger.LogLevel level, String nameLogger, String message, Throwable ex){
         dateEvent = new Date();
         threadName = Thread.currentThread().getName();
@@ -38,6 +51,12 @@ public class LogEvent {
         createCausingNames();
     }
     
+    /**
+     * The method for filling such fields, as causingClassName, causingMethodName and numberOfLine.
+     * He uses dummy exception and his StackTrace for this case.
+     * @see StackTraceElement
+     * @see Throwable
+     */
     private void createCausingNames(){
         Throwable thr = new Throwable();
             StackTraceElement[] ste = thr.getStackTrace();
@@ -67,6 +86,10 @@ public class LogEvent {
         return threadName;
     }
 
+    /**
+     * Givens assumed level of future Log.
+     * @return assumed level
+     */
     Logger.LogLevel getPriority() {
         return priority;
     }
@@ -87,6 +110,10 @@ public class LogEvent {
         return message;
     }
 
+    /**
+     * Returns reference to eception instance, which will have written into future Log Instance.
+     * @return eception instance, which will have written into future Log Instance
+     */
     Throwable getThrow() {
         return ex;
     }

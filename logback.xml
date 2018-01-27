@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Последовательности:
+    %d дата и время;
+    %t имя потока;
+    %p Logger.LogLevel;
+    %l имя логгера;
+    %C имя вызывающего класса;
+    %M имя вызывающего метода;
+    %L номер строки;
+    %m message;
+    throwable ThrowableInfo;
+    %n - переход на след. строку
+--><configuration>
+  <!--Аппендеры -->
+  <!--Файловый аппендер -->
+  <appender class="FileAppender" name="file2">
+        <file>src/test/java/log2.txt</file>
+        <layout>
+            <Pattern>%d %t %p %l %m throwable %n</Pattern>
+        </layout>
+  </appender>
+  <!--Консольный аппендер -->
+  <appender class="ConsoleAppender" name="sout">
+    <layout>
+        <Pattern>%d %t %p %l %m %n</Pattern>
+    </layout>
+  </appender>
+  <appender class="FileAppender" name="file">
+        <file>src/test/java/log.txt</file>
+        <layout>
+            <Pattern>%d %t %p %m %n</Pattern>
+        </layout>
+  </appender>
+  <!--Файловый аппендер с ротированием -->
+  <appender class="RollingFileAppender" name="rollingFile">
+        <file>src\test\java\log.txt</file>
+        <rotation enabled="true" changeXML="false">
+            <size>500</size>
+        </rotation>
+        <layout>
+            <Pattern>%d %t %p %m %n</Pattern>
+        </layout>
+  </appender>
+  <!-- Логгеры -->
+  <!-- Корневой логгер -->
+  <root level="INFO">
+    <appender-ref ref="rollingFile"/>
+  </root>
+  <!-- Логгер определённого класса  -->
+  <logger level="INFO" name="LogRacing">
+    <appender-ref ref="rollingFile"/>
+  </logger>
+  <logger level="INFO" name="Logger2">
+    <appender-ref ref="rollingFile"/>
+  </logger>
+</configuration>

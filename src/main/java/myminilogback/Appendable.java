@@ -2,8 +2,13 @@
 package myminilogback;
 
 /**
- *
+ * Interface of object, which can to record logs (LogEvents).
+ * References uses by such collections, as appenders into Logger.class and LoggerManager.class
  * @author DantalioNxxi
+ * @see AbstractAppender
+ * @see Logger
+ * @see LoggerManager
+ * @see LogEvent
  */
 public interface Appendable {
     
@@ -15,11 +20,11 @@ public interface Appendable {
     
     String getName();
     String getClassName();
-//    Layout getLayout();
+    Layout getLayout();
      
-    void close();//close all resources
+    /**
+     * Close all resources.
+     * Probably, he will appear in later versions.
+     */
+    void close();//close all resources//
 }
-
-//public interface Appendable<T extends OutputStream> {
-//
-//}
