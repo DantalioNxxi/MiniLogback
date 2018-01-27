@@ -26,7 +26,7 @@ public class LogEvent {
      * @param message just message
      */
     LogEvent(Logger.LogLevel level, String nameLogger, String message){
-        dateEvent = new Date();
+//        dateEvent = new Date();
         threadName = Thread.currentThread().getName();
         priority = level;
         this.nameLogger = nameLogger;
@@ -42,7 +42,7 @@ public class LogEvent {
      * @param ex exception, whose description will show into the Log
      */
     LogEvent(Logger.LogLevel level, String nameLogger, String message, Throwable ex){
-        dateEvent = new Date();
+//        dateEvent = new Date();
         threadName = Thread.currentThread().getName();
         priority = level;
         this.nameLogger = nameLogger;
@@ -82,6 +82,14 @@ public class LogEvent {
         return dateEvent;
     }
 
+    /**
+     * Uses by method record(LogEvent le) in Appenders.
+     * @param dateEvent the date and time of the create of LogEvent.
+     */
+    public void setDateEvent(Date dateEvent) {
+        this.dateEvent = dateEvent;
+    }
+    
     String getThreadName() {
         return threadName;
     }

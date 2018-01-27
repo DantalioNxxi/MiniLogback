@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Clas of the Simple File Appender.
@@ -32,7 +33,7 @@ public class FileAppender extends AbstractAppender{
     }
     
     /**
-     * Temporary
+     * Temporary date format, which uses by method record(le).
      */
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yy HH:mm:ss,SSS");
     
@@ -46,7 +47,8 @@ public class FileAppender extends AbstractAppender{
     public void record(LogEvent le) {
         synchronized(file){//as one from options?
             
-//            System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
+            le.setDateEvent(new Date());
+            System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
             
             //set date to le
             String message = layout.getMessage(le);

@@ -181,7 +181,6 @@ public class LoggerManager {
                 try{
                     if (appElement.hasAttribute("class")){
                         String classname = appElement.getAttribute("class");
-                        System.out.println("Класс "+a+"-того: "+classname);
                         switch(classname){
                             case "FileAppender":
                                 try{
@@ -222,7 +221,6 @@ public class LoggerManager {
      * @see FileAppender
      */
     private static void createFileAppender(Node node) throws XMLLoggerException{
-        System.out.println("Создаём FileAppender");
         Element element = (Element)node;
         String name;
         Layout newLayout;
@@ -251,7 +249,6 @@ public class LoggerManager {
      * @see ConsoleAppender
      */
     private static void createConsoleAppender(Node node) throws XMLLoggerException{
-        System.out.println("Создаём ConsoleAppender");
         Element element = (Element)node;
         String name;
         Layout newLayout;
@@ -280,7 +277,6 @@ public class LoggerManager {
      * @see RollingFileAppender
      */
     private static void createRollingFileAppender(Node node) throws XMLLoggerException{
-        System.out.println("Создаём RollingFileAppender");
         Element element = (Element)node;
         String name;
         Layout newLayout;
@@ -302,39 +298,22 @@ public class LoggerManager {
         
         if (rotations.getLength()>0){
             Node rotation = element.getElementsByTagName("rotation").item(0);
-            System.out.println("rotation - тег найден хотя бы один!");
-            
-            System.out.println("Проверяем nodeName у rotation: "+rotation.getNodeName());
             Element erot = (Element)rotation;
             
             if (erot.hasAttributes()){
-                System.out.println("Проверяем rot: "+erot.getTagName());
                 //try-cathc errors
                 rotate = Boolean.parseBoolean(erot.getAttribute("enabled"));
                 changeXML = Boolean.parseBoolean(erot.getAttribute("changeXML"));
             }
             
             if (erot.hasChildNodes()){
-                System.out.println("Childes is here");
                 //here must be a check by try-catch-finally
-                System.out.println("Получаем size:");
                 maxsize = Long.parseLong(erot.getElementsByTagName("size").item(0).getTextContent());
-                System.out.println("maxsize = "+maxsize);
             }
         }
         
-        System.out.println("Пытаемся создать аппендер RollingFileAppender:");
-        System.out.println("logfile: "+logfile.getPath());
-        System.out.println("config: "+config.getPath());
-        System.out.println("rotate: "+rotate);
-        System.out.println("changeXML: "+changeXML);
-        System.out.println("maxsize: "+maxsize);
-        System.out.println("layout: "+newLayout);
-
         newAppender = new RollingFileAppender(logfile, config, rotate, maxsize, changeXML);
-        System.out.println("Аппендер создали");
         newAppender.setLayout(newLayout);
-        System.out.println("Лэйаут задали");
         newAppender.classname = "RollingFileAppender";
         newAppender.name = name;
         System.out.println("Создан аппендер: "+newAppender.toString());

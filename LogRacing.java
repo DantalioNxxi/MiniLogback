@@ -9,10 +9,6 @@ import myminilogback.*;
 import myminilogback.Logger;
 import org.junit.Test;
 
-/**
- *
- * @author DantalioNxxi
- */
 public class LogRacing {
 //    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yy HH:mm:ss,SSS");
     public LogRacing() {
@@ -25,14 +21,10 @@ public class LogRacing {
          myminilogback.Logger l1 = myminilogback.LoggerManager.getLogger("LogRacing");
          myminilogback.Logger l2 = myminilogback.LoggerManager.getLogger("Logger2");
          myminilogback.LoggerManager.showInfo();
-
-//tryings for rotations
             l1.info("Попытка логгера с пер. 1 номер 1");
             l2.info("Попытка логгера с пер. 2 номер 2");
             l2.info("Попытка логгера с пер. 2 номер 3");
             l2.info("Попытка логгера с пер. 2 номер 4");
-            
-
 //            LoggerManager.showInfo();
         for (int i = 1; i <= 10; i++) {
             Thread t = new Thread(new RacerOut("Racer "+i), "Racer"+i);
@@ -41,24 +33,7 @@ public class LogRacing {
             l2.info("Попытка логгера 2 номер 2");
             l1.info("Попытка логгера 1 номер 3");
             l2.info("Попытка логгера 2 номер 4");
-
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 1");
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 2");
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 3");
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 4");
         }
-//         Thread t1 = new Thread(new RacerOut("Jochan"), "Jochan");
-//         t1.start();
-//         Thread t2 = new Thread(new RacerOut("Michael"), "Michael");
-//         t2.start();
-//         Thread t3 = new Thread(new RacerOut("Stiven"), "Stiven");
-//         t3.start();
-         
-//         try{
-//             Thread.sleep(100);
-//         } catch (InterruptedException ex){
-//             System.out.println("Главный поток прерван раньше завершения! "+ex.getMessage());
-//         }
          
          for(int i=1;i<30;i++){
              l1.info("Попытка логгера 1 номер 2");
@@ -93,29 +68,14 @@ public class LogRacing {
          try{
              Thread.sleep(800);
          } catch (InterruptedException ex){
-             System.out.println("ГЛАВНЫЙ ПОТОК ПРЕРВАН");
+             System.out.println("ГЛАВНЫЙ ПОТОК ПРЕРВАН "+ex.getMessage());
          } finally {
              l2.warning("Message",
                      new IOException("Сообщение Исключения",
                              new InvocationTargetException(new FileNotFoundException())));
-//             System.out.println(SDF.format(new Date())+"Исключение потока "+Thread.currentThread().getName());
         }
          l2.setLevel(Logger.LogLevel.WARN);
          l2.info("Попытка логгера 2 номер 3");
-//         System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" WARN");
-//         System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 3");
-         
-         
-
-         
-//         try {
-//             System.out.println("Oжидaниe завершения потоков.");
-//             t1.join();
-//             t2.join();
-//             t3.join();
-//         } catch (InterruptedException ex) {
-//             System.out.println("Глaвный поток прерван " + ex.getMessage());
-//         }
      }
 }
 
@@ -137,12 +97,8 @@ class RacerOut implements Runnable{
     public void run() {
         Logger lr = LoggerManager.getLogger("root");
         Logger lrace = LoggerManager.getLogger("LogRacing");
-
         Logger l2 = LoggerManager.getLogger("Logger2");
         Logger l4 = LoggerManager.getLogger("Logger2");
-//        System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 1");
-//        System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" номер 2");
-
 //        Thread.currentThread().setName(name);
         for(int i =1; i<=kilometers; i++){
 //            try {
@@ -151,16 +107,9 @@ class RacerOut implements Runnable{
 //                System.out.println("Error at way: "+ex.getMessage());
 //            }
 //            System.out.println("Гонщик "+name+" на "+i+" километре");
-
             l2.warning("warning");
             l4.info("Гонщик "+name+" на "+i+" километре");
             l2.fatal("fatal");
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+" warning");
-//            System.out.println(SDF.format(new Date())+"Гонщик "+name+" на "+i+" километре");
-//            System.out.println(SDF.format(new Date())+"Попытка потока "+Thread.currentThread().getName()+"fatal");
-            
-            
-                
 //            l4.info("Гонщик "+name+" на "+i+" километре");
 //            int p = r.nextInt(20);
 //            if (p<2) {
@@ -194,7 +143,6 @@ class RacerOut implements Runnable{
 class Supporter implements Runnable{
     String racer;
 //    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yy HH:mm:ss,SSS");
-    
     public Supporter(String racer) {
         this.racer = racer;
     }
@@ -208,11 +156,5 @@ class Supporter implements Runnable{
         looker.fatal(racer+" вперёд!");
         supporter.fatal("Пит-Стоп для "+racer);
         looker.fatal(racer+" вперёд!");
-
-//        System.out.println(SDF.format(new Date())+"Пит-Стоп для "+racer);
-//        System.out.println(SDF.format(new Date())+"racer+" вперёд!");
-//        System.out.println(SDF.format(new Date())+"Пит-Стоп для "+racer);
-//        System.out.println(SDF.format(new Date())+"racer+" вперёд!");
     }
-    
 }

@@ -3,6 +3,7 @@ package myminilogback;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Clas of the Console Appender.
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat;
 public class ConsoleAppender extends AbstractAppender{
 
     /**
-     * Temporary
+     * Temporary date format, which uses by method record(le).
      */
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yy HH:mm:ss,SSS");
     
@@ -27,8 +28,9 @@ public class ConsoleAppender extends AbstractAppender{
     @Override
     public synchronized void record(LogEvent le) {
 //        if (layout==null) layout = new SimpleLayout();//by default uses SimpleLayout
-
-//        System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
+        
+        le.setDateEvent(new Date());
+        System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
 
         //set date to le
         String message = layout.getMessage(le);

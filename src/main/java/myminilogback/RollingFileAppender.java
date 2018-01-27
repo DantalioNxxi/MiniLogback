@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,7 +64,7 @@ public class RollingFileAppender extends AbstractAppender{
     private int lastCountRotation;
     
     /**
-     * Temporary
+     * Temporary date format, which uses by method record(le).
      */
     private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yy HH:mm:ss,SSS");
     
@@ -135,11 +136,11 @@ public class RollingFileAppender extends AbstractAppender{
      * @see RollingFileAppender#changeXML(java.nio.file.Path, java.io.File, java.lang.String) 
      */
     @Override
-    public synchronized void record(LogEvent le) {   //Is will be synchronized without post-set-date
-        String message = layout.getMessage(le);
+    public synchronized void record(LogEvent le) {
         
-//        //may be here to set Data???!!!
-//        System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
+        le.setDateEvent(new Date());
+        System.out.println("Записывается в "+name+" лог с датой: "+SDF.format(le.getDateEvent()));
+        String message = layout.getMessage(le);
         
         if (isRotation){
             try {
